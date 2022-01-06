@@ -5,11 +5,11 @@
 	let interval;
 	let start = false;
 	let currentTurn = 0;
+	let finish = false;
 	let turns = 2;
 	let turnLength = 1;
 	let originalTime = turnLength * 60;
 	let timer = tweened(originalTime);
-	const progress = writable(0);
 	const onInterval = (callback, milliseconds) => {
 		interval = setInterval(callback, milliseconds);
 
@@ -32,6 +32,7 @@
 				clearInterval(interval);
 				currentTurn = 0;
 				$timer = originalTime;
+				finish();
 				start = !start;
 			}
 			if ($timer < 0) {
@@ -39,7 +40,6 @@
 			}
 		}, 1000);
 	};
-	const finishGame = () => {};
 
 	$: minutes = Math.floor($timer / 60);
 	$: seconds = Math.floor($timer - minutes * 60);
