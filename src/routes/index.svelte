@@ -1,13 +1,15 @@
 <script>
 	import { onDestroy } from 'svelte';
 	import { tweened } from 'svelte/motion';
+	import { writable } from 'svelte/store';
 	let interval;
 	let start = false;
 	let currentTurn = 0;
 	let turns = 2;
 	let turnLength = 1;
-	let originalTime = turnLength * 10;
+	let originalTime = turnLength * 60;
 	let timer = tweened(originalTime);
+	const progress = writable(0);
 	const onInterval = (callback, milliseconds) => {
 		interval = setInterval(callback, milliseconds);
 
@@ -37,6 +39,8 @@
 			}
 		}, 1000);
 	};
+	const finishGame = () => {};
+
 	$: minutes = Math.floor($timer / 60);
 	$: seconds = Math.floor($timer - minutes * 60);
 	$: minname = minutes > 1 ? 'mins' : 'min';
@@ -51,10 +55,18 @@
 		{currentTurnName} out of {turns}
 		{turnName}
 	</p>
+
+	<progress max="1" value={$timer / originalTime} />
 {:else}
 	<h1>Welcome to Pomodoro app</h1>
-	<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 	<button on:click={startCount}>Start timer</button>
 	<input type="number" bind:value={turnLength} />
 	<input type="number" bind:value={turns} />
 {/if}
+
+<style>
+	progress {
+		display: block;
+		width: 33%;
+	}
+</style>
