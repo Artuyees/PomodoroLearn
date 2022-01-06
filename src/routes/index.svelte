@@ -1,33 +1,39 @@
 <script>
+	import { onDestroy } from 'svelte';
 	import { tweened } from 'svelte/motion';
-
+	let interval;
 	let start = false;
 	let currentTurn = 0;
 	let turns = 2;
 	let turnLength = 1;
-	let interval;
+	let originalTime = turnLength * 10;
 	let timer = tweened(originalTime);
 	const onInterval = (callback, milliseconds) => {
 		interval = setInterval(callback, milliseconds);
+
+		onDestroy(() => {
+			clearInterval(interval);
+		});
 	};
-	const stopInterval = () => clearInterval(interval);
-	const setTimer = () => ($timer = originalTime);
 	const startCount = () => {
-		let originalTime = turnLength * 5;
 		start = !start;
 		currentTurn++;
-		console.log(turns, turnLength, turns, originalTime);
+		$timer = $timer * turnLength;
 		onInterval(() => {
 			$timer--;
+			console.log(start, $timer, currentTurn, turns, turnLength, originalTime);
 			if ($timer == 0) {
 				currentTurn++;
-				setTimer();
+				$timer = originalTime;
 			}
 			if (currentTurn > turns) {
-				stopInterval();
+				clearInterval(interval);
 				currentTurn = 0;
-				setTimer();
+				$timer = originalTime;
 				start = !start;
+			}
+			if ($timer < 0) {
+				clearInterval(interval);
 			}
 		}, 1000);
 	};
