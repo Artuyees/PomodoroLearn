@@ -102,7 +102,7 @@
 	</div>
 {:else if isFinish}
 	<div class="">
-		<p class="text-white text-2xl">Congratulations</p>
+		<p class="text-white text-7xl"><strong>Congratulations</strong></p>
 	</div>
 {:else}
 	<div class="flex flex-col items-center rounded-lg bg-white shadow-xl p-8">
