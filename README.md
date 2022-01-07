@@ -1,6 +1,6 @@
 ## Pomodoro timer made with svelte
 
-App to help you study or work.
+Website to help you study or work.
 
 made using Svelte by Artur Kuciński.
 
