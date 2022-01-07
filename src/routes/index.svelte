@@ -43,6 +43,7 @@
 			}
 
 			if ($timer < 0) {
+				breakTime /= 60;
 				clearInterval(interval);
 			}
 		}, 1000);
@@ -87,8 +88,8 @@
 		<div class="w-full mx-4 rounded-full overflow-hidden bg-gray-200 h-8">
 			<div
 				class="bg-gradient-to-t {isBreak
-					? 'from-lime-600  via-green-600'
-					: 'from-red-600  to-red-900'} rounded-full h-8"
+					? 'from-lime-900  to-lime-600'
+					: 'from-red-900  to-red-600'} rounded-full h-8"
 				style="width:{($timer / (isBreak ? breakTime : originalTime)) * 100}%"
 			/>
 		</div>
