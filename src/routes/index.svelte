@@ -83,7 +83,7 @@
 			{turnName}
 		{:else}
 			<div class="text-7xl">
-				{minutes < 10 ? '0' : ''}{minutes}:{seconds}
+				{minutes < 10 ? '0' : ''}{minutes}:{seconds < 10 ? '0' : ''}{seconds}
 			</div>
 		{/if}
 		<div class="w-full mx-4 rounded-full overflow-hidden bg-gray-200 h-8">
