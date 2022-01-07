@@ -4,7 +4,7 @@ Website to help you study or work.
 
 made using Svelte by Artur Kuciński.
 
-## Starting up
+## running dev server
 
 npm run dev
 
