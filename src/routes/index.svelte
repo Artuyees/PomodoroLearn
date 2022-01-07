@@ -1,5 +1,4 @@
 <script>
-	import { onDestroy } from 'svelte';
 	import { tweened } from 'svelte/motion';
 	let interval;
 	let isBreak = false;
@@ -8,13 +7,17 @@
 	let currentTurn = 0;
 	let isFinish = false;
 	let turns = 2;
-	let turnLength = 1;
+	let isPaused = true;
+	let turnLength = 20;
 	let originalTime = turnLength * 60;
-	let timer = tweened(turnLength * 60);
+	let timer = tweened();
+
 	const onInterval = (callback, ms) => {
 		interval = setInterval(callback, ms);
 	};
 	const startCount = () => {
+		originalTime = turnLength * 60;
+		$timer = turnLength * 60;
 		isStart = !isStart;
 		currentTurn++;
 		breakTime *= 60;
@@ -29,18 +32,27 @@
 			}
 			if (Math.floor($timer) == 0 && !isBreak) {
 				isBreak = !isBreak;
+				isPaused = !isPaused;
 				$timer = breakTime;
 			}
 			if (Math.floor($timer) == 0 && isBreak) {
 				currentTurn++;
 				$timer = originalTime;
 				isBreak = !isBreak;
+				isPaused = !isPaused;
 			}
 
 			if ($timer < 0) {
 				clearInterval(interval);
 			}
 		}, 1000);
+	};
+
+	const cancelTimer = () => {
+		clearInterval(interval);
+		isBreak = false;
+		isStart = false;
+		isFinish = false;
 	};
 	const Finish = () => {
 		isFinish = true;
@@ -50,35 +62,44 @@
 	};
 	$: minutes = Math.floor($timer / 60);
 	$: seconds = Math.floor($timer - minutes * 60);
-	$: minname = minutes > 1 ? 'mins' : 'min';
 	$: turnName = turns > 1 ? 'turns' : 'turn';
 </script>
 
+<audio bind:paused={isPaused} src="http://soundbible.com/grab.php?id=2218&type=mp3"
+	><!-- Sound "Service Bell Help" by  Daniel Simion from soundbible.com, licensed under Attribution 3.0  --></audio
+>
+
 {#if isStart}
-	{#if !isBreak}
-		<div>
-			<p>
-				remaining time: {#if minutes >= 1} {minutes} {minname} and {/if}
-				{seconds} seconds of {currentTurn}/{turns}
-				{turnName}
-			</p>
+	<div
+		class="grid grid-cols-1 gap-4 justify-items-center shadow-xl p-4 w-1/3 text-2xl bg-white rounded-lg text-black min-w-fit "
+	>
+		{#if !isBreak}
+			<div class="text-7xl">
+				{minutes < 10 ? '0' : ''}{minutes}:{seconds < 10 ? '0' : ''}{seconds}
+			</div>
+			{currentTurn}/{turns}
+			{turnName}
+		{:else}
+			<div class="text-7xl">
+				{minutes < 10 ? '0' : ''}{minutes < 1 ? '0' : ''}{minutes}:{seconds}
+			</div>
+		{/if}
+		<div class="w-full mx-4 rounded-full overflow-hidden bg-gray-200 h-8">
+			<div
+				class="bg-gradient-to-t {isBreak
+					? 'from-lime-600  via-green-600'
+					: 'from-red-600  to-red-900'} rounded-full h-8"
+				style="width:{($timer / (isBreak ? breakTime : originalTime)) * 100}%"
+			/>
 		</div>
-	{:else}
-		<div>
-			<p>
-				remaining time: {#if minutes >= 1} {minutes} {minname} and {/if}
-				{seconds} seconds of break
-			</p>
-		</div>
-	{/if}
-	<div class="w-full bg-gray-200 h-5 mb-6">
-		<div
-			class="bg-blue-600 h-5"
-			style="width:{($timer / (isBreak ? breakTime : originalTime)) * 100}%"
-		/>
+		<button
+			on:click={cancelTimer}
+			class=" w-32 h-12 transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-red-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
+			><strong>stop timer</strong></button
+		>
 	</div>
 {:else if isFinish}
-	<div>
+	<div class="">
 		<p class="text-white text-2xl">Congratulations</p>
 	</div>
 {:else}
