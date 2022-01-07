@@ -83,7 +83,7 @@
 			{turnName}
 		{:else}
 			<div class="text-7xl">
-				{minutes < 10 ? '0' : ''}{minutes}:{seconds}
+				{minutes < 10 ? '0' : ''}{minutes}:{seconds < 10 ? '0' : ''}{seconds}
 			</div>
 		{/if}
 		<div class="w-full mx-4 rounded-full overflow-hidden bg-gray-200 h-8">
@@ -102,7 +102,7 @@
 	</div>
 {:else if isFinish}
 	<div class="">
-		<p class="text-white text-2xl">Congratulations</p>
+		<p class="text-white text-7xl"><strong>Congratulations</strong></p>
 	</div>
 {:else}
 	<div class="flex flex-col items-center rounded-lg bg-white shadow-xl p-8">
