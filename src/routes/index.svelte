@@ -51,6 +51,7 @@
 
 	const cancelTimer = () => {
 		clearInterval(interval);
+		breakTime /= 60;
 		isBreak = false;
 		isStart = false;
 		isFinish = false;
