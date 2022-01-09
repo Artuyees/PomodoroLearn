@@ -14,4 +14,4 @@ npm run build
 
 ## Sounds used:
 
-Sound "Service Bell Help" by Daniel Simion from soundbible.com, licensed under Attribution 3.0
+Sound "Service Bell Help" by Daniel Simion from soundbible.com, license Attribution 3.0, 
