@@ -2,15 +2,45 @@
 	import { tweened } from 'svelte/motion';
 	let interval;
 	let isBreak = false;
-	let breakTime = 5;
 	let isStart = false;
-	let currentTurn = 0;
 	let isFinish = false;
+	let isPaused = false;
+	let isSoundPaused = true;
+	let isClickedOnce = false;
+	let breakTime = 5;
+	let currentTurn = 0;
 	let turns = 2;
-	let isPaused = true;
 	let turnLength = 20;
 	let originalTime = turnLength * 60;
 	let timer = tweened();
+
+	const handleTimer = () => {
+		$timer--;
+		console.log($timer, 'handle timer');
+		if (currentTurn > turns) {
+			clearInterval(interval);
+			currentTurn = 0;
+			isStart = !isStart;
+			$timer = originalTime;
+			Finish();
+		}
+		if (Math.floor($timer) == 0 && !isBreak) {
+			isBreak = !isBreak;
+			isSoundPaused = !isSoundPaused;
+			$timer = breakTime;
+		}
+		if (Math.floor($timer) == 0 && isBreak) {
+			currentTurn++;
+			$timer = originalTime;
+			isBreak = !isBreak;
+			isSoundPaused = !isSoundPaused;
+		}
+
+		if ($timer < 0) {
+			breakTime /= 60;
+			clearInterval(interval);
+		}
+	};
 
 	const onInterval = (callback, ms) => {
 		interval = setInterval(callback, ms);
@@ -22,39 +52,35 @@
 		currentTurn++;
 		breakTime *= 60;
 		onInterval(() => {
-			$timer--;
-			if (currentTurn > turns) {
-				clearInterval(interval);
-				currentTurn = 0;
-				isStart = !isStart;
-				$timer = originalTime;
-				Finish();
-			}
-			if (Math.floor($timer) == 0 && !isBreak) {
-				isBreak = !isBreak;
-				isPaused = !isPaused;
-				$timer = breakTime;
-			}
-			if (Math.floor($timer) == 0 && isBreak) {
-				currentTurn++;
-				$timer = originalTime;
-				isBreak = !isBreak;
-				isPaused = !isPaused;
-			}
-
-			if ($timer < 0) {
-				breakTime /= 60;
-				clearInterval(interval);
-			}
+			handleTimer();
 		}, 1000);
 	};
 
+	const pauseTimer = () => {
+		isPaused = !isPaused;
+		if (isPaused) {
+			clearInterval(interval);
+		} else {
+			onInterval(() => {
+				handleTimer();
+			}, 1000);
+		}
+	};
 	const cancelTimer = () => {
-		clearInterval(interval);
-		breakTime /= 60;
-		isBreak = false;
-		isStart = false;
-		isFinish = false;
+		if (isClickedOnce) {
+			clearInterval(interval);
+			breakTime /= 60;
+			currentTurn = 0;
+			isBreak = false;
+			isStart = false;
+			isFinish = false;
+			isClickedOnce = !isClickedOnce;
+		} else {
+			isClickedOnce = true;
+			setTimeout(() => {
+				isClickedOnce = !isClickedOnce;
+			}, 3000);
+		}
 	};
 	const Finish = () => {
 		isFinish = true;
@@ -62,12 +88,20 @@
 			isFinish = false;
 		}, 4000);
 	};
+
+	const skipTurn = () => {
+		clearInterval(interval);
+		$timer = 1;
+		onInterval(() => {
+			handleTimer();
+		}, 1000);
+	};
 	$: minutes = Math.floor($timer / 60);
 	$: seconds = Math.floor($timer - minutes * 60);
 	$: turnName = turns > 1 ? 'turns' : 'turn';
 </script>
 
-<audio bind:paused={isPaused} src="http://soundbible.com/grab.php?id=2218&type=mp3"
+<audio bind:paused={isSoundPaused} src="http://soundbible.com/grab.php?id=2218&type=mp3"
 	><!-- Sound "Service Bell Help" by  Daniel Simion from soundbible.com, licensed under Attribution 3.0  --></audio
 >
 
@@ -94,11 +128,31 @@
 				style="width:{($timer / (isBreak ? breakTime : originalTime)) * 100}%"
 			/>
 		</div>
-		<button
-			on:click={cancelTimer}
-			class=" w-32 h-12 transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-red-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
-			><strong>stop timer</strong></button
-		>
+		<div class="grid {isClickedOnce || isPaused ? 'grid-cols-1' : 'grid-cols-3'} gap-4">
+			<button
+				on:click={cancelTimer}
+				class=" w-32 h-12 {isPaused ? 'hidden' : ''} {isClickedOnce
+					? 'col-span-'
+					: ''} transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-red-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
+				><strong>{!isClickedOnce ? 'cancel Timer' : 'Are you sure?'}</strong></button
+			>
+			<button
+				on:click={pauseTimer}
+				class=" {isClickedOnce
+					? 'hidden'
+					: ''} w-32 h-12 transition ease-in duration-300 rounded-lg bg-white border-black border-2 {!isPaused
+					? 'hover:bg-blue-800'
+					: 'hover:bg-green-800'} hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
+				><strong>{!isPaused ? 'pause' : 'play'}</strong></button
+			>
+			<button
+				on:click={skipTurn}
+				class=" w-32 h-12 {isPaused || isClickedOnce
+					? 'hidden'
+					: ''} transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-blue-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
+				><strong>Skip Turn</strong></button
+			>
+		</div>
 	</div>
 {:else if isFinish}
 	<div class="">
