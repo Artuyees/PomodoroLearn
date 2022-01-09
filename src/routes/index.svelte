@@ -16,6 +16,7 @@
 
 	const handleTimer = () => {
 		$timer--;
+		console.log($timer, 'handle timer');
 		if (currentTurn > turns) {
 			clearInterval(interval);
 			currentTurn = 0;
@@ -69,12 +70,16 @@
 		if (isClickedOnce) {
 			clearInterval(interval);
 			breakTime /= 60;
+			currentTurn = 0;
 			isBreak = false;
 			isStart = false;
 			isFinish = false;
 			isClickedOnce = !isClickedOnce;
 		} else {
-			isClickedOnce = !isClickedOnce;
+			isClickedOnce = true;
+			setTimeout(() => {
+				isClickedOnce = !isClickedOnce;
+			}, 3000);
 		}
 	};
 	const Finish = () => {
@@ -82,6 +87,14 @@
 		setTimeout(() => {
 			isFinish = false;
 		}, 4000);
+	};
+
+	const skipTurn = () => {
+		clearInterval(interval);
+		$timer = 1;
+		onInterval(() => {
+			handleTimer();
+		}, 1000);
 	};
 	$: minutes = Math.floor($timer / 60);
 	$: seconds = Math.floor($timer - minutes * 60);
@@ -115,18 +128,29 @@
 				style="width:{($timer / (isBreak ? breakTime : originalTime)) * 100}%"
 			/>
 		</div>
-		<div class="grid grid-cols-2 gap-4">
+		<div class="grid {isClickedOnce || isPaused ? 'grid-cols-1' : 'grid-cols-3'} gap-4">
 			<button
 				on:click={cancelTimer}
-				class=" w-32 h-12 transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-red-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
+				class=" w-32 h-12 {isPaused ? 'hidden' : ''} {isClickedOnce
+					? 'col-span-'
+					: ''} transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-red-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
 				><strong>{!isClickedOnce ? 'cancel Timer' : 'Are you sure?'}</strong></button
 			>
 			<button
 				on:click={pauseTimer}
-				class=" w-32 h-12 transition ease-in duration-300 rounded-lg bg-white border-black border-2 {!isPaused
+				class=" {isClickedOnce
+					? 'hidden'
+					: ''} w-32 h-12 transition ease-in duration-300 rounded-lg bg-white border-black border-2 {!isPaused
 					? 'hover:bg-blue-800'
 					: 'hover:bg-green-800'} hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
 				><strong>{!isPaused ? 'pause' : 'play'}</strong></button
+			>
+			<button
+				on:click={skipTurn}
+				class=" w-32 h-12 {isPaused || isClickedOnce
+					? 'hidden'
+					: ''} transition ease-in duration-300 rounded-lg bg-white border-black border-2 hover:bg-blue-800 hover:scale-105 text-black hover:text-white hover:border-0 text-lg"
+				><strong>Skip Turn</strong></button
 			>
 		</div>
 	</div>
