@@ -163,31 +163,44 @@
 		<h1 class="text-4xl m-8 ">Welcome to Pomodoro app</h1>
 		<div class="flex md:flex-row flex-col text-xl mb-8">
 			<div class="text-center m-2">
-				<input
-					type="number"
-					bind:value={turnLength}
-					class=".appearance-none h-16 text-center m-2 w-16 bg-white border-blackpurple border-2 rounded-lg"
-				/>
+				<label
+					><input
+						id="turnTime"
+						type="number"
+						bind:value={turnLength}
+						class=".appearance-none h-16 text-center m-2 w-16 bg-white border-blackpurple border-2 rounded-lg"
+					/></label
+				>
+
 				<p class="">Turn time? (minutes)</p>
 			</div>
 
 			<div class="text-center m-2">
-				<input
-					type="number"
-					bind:value={turns}
-					class=".appearance-none h-16 text-center m-2 w-16 bg-white border-blackpurple border-2 rounded-lg"
-				/>
+				<label>
+					<input
+						id="turnsNumber"
+						type="number"
+						bind:value={turns}
+						class=".appearance-none h-16 text-center m-2 w-16 bg-white border-blackpurple border-2 rounded-lg"
+					/>
+				</label>
+
 				<p>How many turns?</p>
 			</div>
 			<div class="text-center m-2">
-				<input
-					type="number"
-					bind:value={breakTime}
-					class=".appearance-none h-16 text-center m-2 w-16 bg-white border-blackpurple border-2 rounded-lg"
-				/>
+				<label>
+					<input
+						id="breakTime"
+						type="number"
+						bind:value={breakTime}
+						class=".appearance-none h-16 text-center m-2 w-16 bg-white border-blackpurple border-2 rounded-lg"
+					/>
+				</label>
+
 				<p>Break time? (minutes)</p>
 			</div>
 		</div>
+
 		<button
 			on:click={startCount}
 			class=" w-44 h-16 transition ease-in duration-300 bg-confirm hover:bg-confirmhover hover:scale-105 text-white rounded-lg text-lg"
