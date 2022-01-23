@@ -208,6 +208,9 @@
 		>
 	</div>
 {/if}
+<div class="absolute bottom-0 text-purple-200 w-full text-center justify-center">
+	<a href="https://github.com/Artuyees">Artur Kuciński | 2022</a>
+</div>
 
 <style>
 	input[type='number']::-webkit-inner-spin-button,
