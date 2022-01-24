@@ -1,8 +1,9 @@
 ## Pomodoro timer made with svelte
 
-Website to help you study or work.
+Website made to help you focus while learning new things or studying for new test.
 
-made using Svelte by Artur Kuciński.
+
+made with Svelte by Artur Kuciński.
 
 ## running dev server
 
