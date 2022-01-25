@@ -2,8 +2,8 @@
 
 Website made to help you focus while learning new things or studying for new test.
 
-
-made with Svelte by Artur Kuciński.
+Uses Tailwind css and sveltekit.
+made by Artur Kuciński.
 
 ## running dev server
 
