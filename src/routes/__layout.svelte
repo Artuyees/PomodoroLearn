@@ -11,11 +11,11 @@
 	/>
 </svelte:head>
 
-<div class="h-screen w-screen bg-lightpurple">
+<div class="h-full w-screen min-h-screen bg-lightpurple">
 	<div class="grid justify-items-center items-center h-screen">
 		<slot />
-	</div>
-	<div class="absolute bottom-0 text-purple-200 w-full text-center justify-center">
-		<a href="https://github.com/Artuyees">Artur Kuciński | 2022</a>
+		<div class="mt-auto text-purple-200 w-full text-center justify-center">
+			<a href="https://github.com/Artuyees">Artur Kuciński | 2022</a>
+		</div>
 	</div>
 </div>

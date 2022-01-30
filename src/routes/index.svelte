@@ -16,7 +16,6 @@
 
 	const handleTimer = () => {
 		$timer--;
-		console.log($timer, 'handle timer');
 		if (currentTurn > turns) {
 			clearInterval(interval);
 			currentTurn = 0;
@@ -86,6 +85,7 @@
 		isFinish = true;
 		setTimeout(() => {
 			isFinish = false;
+			breakTime /= 60;
 		}, 4000);
 	};
 
@@ -107,7 +107,7 @@
 
 {#if isStart}
 	<div
-		class="grid grid-cols-1 gap-4 justify-items-center shadow-xl p-4 w-1/3 text-2xl bg-white rounded-lg text-black min-w-fit "
+		class="grid grid-cols-1 gap-4 justify-items-center min-h-fit shadow-xl p-4 w-1/3 text-2xl bg-white rounded-lg text-black min-w-fit "
 	>
 		{#if !isBreak}
 			<div class="text-7xl">
@@ -128,7 +128,7 @@
 				style="width:{($timer / (isBreak ? breakTime : originalTime)) * 100}%"
 			/>
 		</div>
-		<div class="grid {isClickedOnce || isPaused ? 'grid-cols-1' : 'grid-cols-3'} gap-4">
+		<div class="flex gap-4 md:flex-row flex-col">
 			<button
 				on:click={cancelTimer}
 				class=" w-32 h-12 {isPaused ? 'hidden' : ''} {isClickedOnce
@@ -156,13 +156,13 @@
 	</div>
 {:else if isFinish}
 	<div class="">
-		<p class="text-white text-7xl"><strong>Congratulations</strong></p>
+		<p class="text-white text-2xl md:text-7xl"><strong>Congratulations</strong></p>
 	</div>
 {:else}
-	<div class="flex flex-col items-center rounded-lg bg-white shadow-xl p-8">
-		<h1 class="text-4xl m-8 ">Welcome to Pomodoro app</h1>
-		<div class="flex md:flex-row flex-col text-xl mb-8">
-			<div class="text-center m-2">
+	<div class="flex flex-col items-center rounded-lg bg-white shadow-xl p-4">
+		<h1 class="text-2xl md:text-4xl">Welcome to Pomodoro app</h1>
+		<div class="flex md:flex-row flex-col text-xl">
+			<div class="text-center m-1 md:m-2">
 				<label
 					><input
 						id="turnTime"
@@ -175,7 +175,7 @@
 				<p class="">Turn time? (minutes)</p>
 			</div>
 
-			<div class="text-center m-2">
+			<div class="text-center m-1 md:m-2">
 				<label>
 					<input
 						id="turnsNumber"
@@ -187,7 +187,7 @@
 
 				<p>How many turns?</p>
 			</div>
-			<div class="text-center m-2">
+			<div class="text-center m-1 md:m-2">
 				<label>
 					<input
 						id="breakTime"
