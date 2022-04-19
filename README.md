@@ -1,6 +1,6 @@
 ## Pomodoro timer made with svelte
 
-Website made to help you focus while learning new things or studying for new test.
+Website made to help you focus while learning new things or studying for a test.
 
 Uses Tailwind css and sveltekit.
 made by Artur Kuciński.
